@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home — Echo</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <h1 class="logo" aria-label="Echo"></h1>
+      <ul class="nav-links" id="nav-links"></ul>
+      <div class="sidebar-user" id="nav-user"></div>
+    </aside>
+    <div class="app-main">
+      <header class="mobile-header">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+        <span class="logo logo-inline" aria-label="Echo"></span>
+        <span></span>
+      </header>
+      <main class="main-content">
+        <section class="suggested-section">
+          <h2 class="section-title">Suggested for you</h2>
+          <p class="section-sub">People who share your interests</p>
+          <div id="suggested-users" class="suggested-scroll"></div>
+        </section>
+        <section class="compose-box">
+          <form id="compose-form">
+            <textarea name="content" placeholder="What's on your mind?" maxlength="500"></textarea>
+            <div class="compose-toolbar">
+              <div class="compose-toolbar-actions">
+                <label class="compose-icon-btn" data-tooltip="Add image" aria-label="Add image">
+                  <input type="file" id="post-image" name="image" accept="image/jpeg,image/png,image/gif,image/webp" hidden>
+                  <svg class="compose-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>
+                    <path d="M21 15l-5-5L5 21"/>
+                  </svg>
+                </label>
+                <button type="button" class="compose-icon-btn" id="emoji-toggle" data-tooltip="Add emoji" aria-label="Add emoji" aria-expanded="false">
+                  <svg class="compose-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                    <circle cx="9" cy="9" r="1" fill="currentColor" stroke="none"/>
+                    <circle cx="15" cy="9" r="1" fill="currentColor" stroke="none"/>
+                  </svg>
+                </button>
+              </div>
+              <div id="emoji-picker" class="emoji-picker hidden" role="listbox" aria-label="Face emojis"></div>
+            </div>
+            <div class="image-preview-wrap hidden" id="image-preview-wrap">
+              <img id="image-preview" class="image-preview" alt="Preview">
+              <button type="button" id="clear-image" class="compose-icon-btn image-preview-remove" data-tooltip="Remove image" aria-label="Remove image">×</button>
+            </div>
+            <button type="submit" class="btn btn-primary btn-post">Post</button>
+          </form>
+        </section>
+        <h2 class="section-title">Discover posts</h2>
+        <div id="home-feed"></div>
+      </main>
+    </div>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/layout.js"></script>
+  <script src="/js/posts.js"></script>
+  <script src="/js/home.js"></script>
+</body>
+</html>

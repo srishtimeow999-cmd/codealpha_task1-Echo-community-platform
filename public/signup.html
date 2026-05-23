@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign up — Echo</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="auth-page auth-page--signup" data-page="signup">
+  <div class="auth-card">
+    <h1 class="logo" aria-label="Echo"></h1>
+    <p class="logo-sub">Create your account</p>
+    <div id="alert" class="alert alert-error hidden"></div>
+    <form id="auth-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required minlength="3" maxlength="30" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="displayName">Display name</label>
+        <input type="text" id="displayName" name="displayName" maxlength="50" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required minlength="6" autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label>Interests (optional)</label>
+        <div id="signup-interests" class="interest-picker"></div>
+      </div>
+      <button type="submit" class="btn btn-primary">Sign up</button>
+    </form>
+    <p class="auth-footer">Already have an account? <a href="/login.html">Log in</a></p>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+</body>
+</html>

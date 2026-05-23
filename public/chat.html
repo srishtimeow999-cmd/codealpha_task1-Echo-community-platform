@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat — Echo</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <h1 class="logo" aria-label="Echo"></h1>
+      <ul class="nav-links" id="nav-links"></ul>
+      <div class="sidebar-user" id="nav-user"></div>
+    </aside>
+    <div class="app-main">
+      <header class="mobile-header">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+        <span class="logo logo-inline" aria-label="Echo"></span>
+        <span></span>
+      </header>
+      <main class="main-content chat-page">
+        <a href="/messages.html" class="back-link">← Messages</a>
+        <div id="chat-header" class="chat-header"></div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <form id="chat-form" class="chat-form">
+          <input type="text" name="text" placeholder="Message…" maxlength="1000" required autocomplete="off">
+          <button type="submit" class="btn btn-primary btn-sm">Send</button>
+        </form>
+      </main>
+    </div>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/layout.js"></script>
+  <script src="/js/chat.js"></script>
+</body>
+</html>

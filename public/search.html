@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search — Echo</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <h1 class="logo" aria-label="Echo"></h1>
+      <ul class="nav-links" id="nav-links"></ul>
+      <div class="sidebar-user" id="nav-user"></div>
+    </aside>
+    <div class="app-main">
+      <header class="mobile-header">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+        <span class="logo logo-inline" aria-label="Echo"></span>
+        <span></span>
+      </header>
+      <main class="main-content">
+        <h1 class="page-heading">Search</h1>
+        <form id="search-form" class="search-form">
+          <input type="search" name="q" id="search-input" placeholder="Search profiles or posts…" autocomplete="off" required minlength="2">
+          <button type="submit" class="btn btn-primary btn-search">Search</button>
+        </form>
+        <section class="search-history-section">
+          <div class="search-history-header">
+            <h2 class="section-title">Recent searches</h2>
+            <button type="button" id="clear-history" class="btn-text hidden">Clear all</button>
+          </div>
+          <div id="search-history" class="search-history-list"></div>
+        </section>
+        <div id="search-results"></div>
+      </main>
+    </div>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/layout.js"></script>
+  <script src="/js/posts.js"></script>
+  <script src="/js/search.js"></script>
+</body>
+</html>
