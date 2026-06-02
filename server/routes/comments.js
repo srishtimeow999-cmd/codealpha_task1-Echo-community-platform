@@ -1,6 +1,7 @@
 const express = require('express');
 const Comment = require('../models/Comment');
 const Post = require('../models/Post');
+const Notification = require('../models/Notification');
 const { protect } = require('../middleware/auth');
 
 const router = express.Router();
@@ -25,6 +26,16 @@ router.post('/', protect, async (req, res) => {
 
     await comment.populate('author', 'username displayName avatar');
     const commentsCount = await Comment.countDocuments({ post: postId });
+
+    if (post.author.toString() !== req.user._id.toString()) {
+      await Notification.create({
+        recipient: post.author,
+        sender: req.user._id,
+        type: 'comment',
+        post: post._id,
+        comment: comment._id,
+      });
+    }
 
     res.status(201).json({ comment, commentsCount });
   } catch (err) {

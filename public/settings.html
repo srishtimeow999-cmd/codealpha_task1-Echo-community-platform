@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Echo</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <h1 class="logo" aria-label="Echo"></h1>
+      <ul class="nav-links" id="nav-links"></ul>
+      <div class="sidebar-user" id="nav-user"></div>
+    </aside>
+    <div class="app-main">
+      <header class="mobile-header">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+        <span class="logo logo-inline" aria-label="Echo"></span>
+        <span></span>
+      </header>
+      <main class="main-content">
+        <h1 class="page-heading">Settings</h1>
+        
+        <section class="settings-section">
+          <h2 class="settings-section-title">Account Credentials</h2>
+          <form id="account-settings-form" class="settings-grid">
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="password">New Password (leave blank to keep current)</label>
+              <input type="password" id="password" name="password" placeholder="At least 6 characters" minlength="6">
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Update Account</button>
+          </form>
+        </section>
+
+        <section class="settings-section">
+          <h2 class="settings-section-title">Profile Info</h2>
+          <form id="profile-settings-form" class="settings-grid">
+            <div class="form-group">
+              <label for="displayName">Display name</label>
+              <input type="text" id="displayName" name="displayName" maxlength="50">
+            </div>
+            <div class="form-group">
+              <label for="bio">Bio</label>
+              <textarea id="bio" name="bio" maxlength="160"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="avatar">Avatar URL</label>
+              <input type="url" id="avatar" name="avatar" placeholder="https://…">
+            </div>
+            <div class="form-group">
+              <label>Interests</label>
+              <div id="interest-picker" class="interest-picker"></div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Save Profile</button>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/layout.js"></script>
+  <script src="/js/settings.js"></script>
+</body>
+</html>

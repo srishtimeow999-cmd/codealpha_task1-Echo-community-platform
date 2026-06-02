@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/User');
 const Post = require('../models/Post');
+const Notification = require('../models/Notification');
 const { protect } = require('../middleware/auth');
 const { enrichPosts } = require('../utils/postHelpers');
 
@@ -102,6 +103,36 @@ router.put('/profile', protect, async (req, res) => {
   }
 });
 
+router.put('/account', protect, async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (email && email.trim() !== '') {
+      const emailLower = email.trim().toLowerCase();
+      if (emailLower !== user.email) {
+        const exists = await User.findOne({ email: emailLower });
+        if (exists) {
+          return res.status(400).json({ message: 'Email already in use' });
+        }
+        user.email = emailLower;
+      }
+    }
+
+    if (password && password.trim() !== '') {
+      if (password.length < 6) {
+        return res.status(400).json({ message: 'Password must be at least 6 characters' });
+      }
+      user.password = password;
+    }
+
+    await user.save();
+    res.json({ message: 'Account updated successfully', user: user.toPublic() });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 router.post('/:id/follow', protect, async (req, res) => {
   try {
     const target = await User.findById(req.params.id);
@@ -123,6 +154,12 @@ router.post('/:id/follow', protect, async (req, res) => {
     target.followers.push(req.user._id);
     await req.user.save();
     await target.save();
+
+    await Notification.create({
+      recipient: target._id,
+      sender: req.user._id,
+      type: 'follow',
+    });
 
     res.json({
       message: 'Followed',

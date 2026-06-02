@@ -67,7 +67,12 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/me', protect, (req, res) => {
-  res.json({ user: req.user.toPublic() });
+  res.json({
+    user: {
+      ...req.user.toPublic(),
+      email: req.user.email,
+    }
+  });
 });
 
 module.exports = router;

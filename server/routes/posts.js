@@ -4,6 +4,7 @@ const path = require('path');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
+const Notification = require('../models/Notification');
 const { protect } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 const { enrichPost, enrichPosts } = require('../utils/postHelpers');
@@ -120,6 +121,15 @@ router.post('/:id/like', protect, async (req, res) => {
     if (!alreadyLiked) {
       post.likes.push(req.user._id);
       await post.save();
+
+      if (post.author.toString() !== req.user._id.toString()) {
+        await Notification.create({
+          recipient: post.author,
+          sender: req.user._id,
+          type: 'like',
+          post: post._id,
+        });
+      }
     }
 
     res.json({

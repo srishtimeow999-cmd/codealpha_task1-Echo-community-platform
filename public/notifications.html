@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications — Echo</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <h1 class="logo" aria-label="Echo"></h1>
+      <ul class="nav-links" id="nav-links"></ul>
+      <div class="sidebar-user" id="nav-user"></div>
+    </aside>
+    <div class="app-main">
+      <header class="mobile-header">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+        <span class="logo logo-inline" aria-label="Echo"></span>
+        <span></span>
+      </header>
+      <main class="main-content">
+        <div class="notifications-header">
+          <h1 class="page-heading" style="margin-bottom:0;">Notifications</h1>
+          <button id="mark-read-btn" class="btn btn-secondary btn-sm hidden">Mark all as read</button>
+        </div>
+        <div id="notifications-list" class="notifications-list"></div>
+      </main>
+    </div>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/layout.js"></script>
+  <script src="/js/notifications.js"></script>
+</body>
+</html>
