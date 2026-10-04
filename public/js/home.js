@@ -517,26 +517,88 @@ document.addEventListener('DOMContentLoaded', async () => {
   function getUserLiveLocation() {
     return new Promise((resolve) => {
       if (!navigator.geolocation) {
-        console.warn('Geolocation not supported by this browser.');
+        showLocationBanner('error', '📍 Geolocation is not supported by your browser. Showing a default location.');
         resolve(null);
         return;
       }
 
+      // Use cached coords from this session for instant load
+      const cached = sessionStorage.getItem('userCoords');
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          resolve(parsed);
+          return;
+        } catch (_) {}
+      }
+
+      showLocationBanner('loading', '📍 Detecting your location...');
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          resolve({
+          const coords = {
             lat: position.coords.latitude,
             lng: position.coords.longitude
-          });
+          };
+          sessionStorage.setItem('userCoords', JSON.stringify(coords));
+          hideLocationBanner();
+          resolve(coords);
         },
         (error) => {
-          console.warn('Geolocation error:', error.message);
+          let msg = '📍 Location access denied.';
+          if (error.code === error.TIMEOUT) msg = '📍 Location request timed out.';
+          else if (error.code === error.POSITION_UNAVAILABLE) msg = '📍 Location unavailable on this device.';
+          showLocationBanner('error', `${msg} <button onclick="retryLocation()" style="margin-left:8px;padding:2px 10px;border-radius:6px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:0.8rem;">Retry</button>`);
           resolve(null);
         },
-        { timeout: 10000, enableHighAccuracy: true }
+        { timeout: 10000, enableHighAccuracy: true, maximumAge: 60000 }
       );
     });
   }
+
+  function showLocationBanner(type, html) {
+    let banner = document.getElementById('location-banner');
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'location-banner';
+      banner.style.cssText = `
+        position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+        z-index: 9999; padding: 0.6rem 1.2rem; border-radius: 8px;
+        font-size: 0.85rem; font-weight: 500; display: flex; align-items: center;
+        gap: 0.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px); transition: opacity 0.3s;
+      `;
+      document.body.appendChild(banner);
+    }
+    if (type === 'loading') {
+      banner.style.background = 'rgba(59,130,246,0.15)';
+      banner.style.border = '1px solid rgba(59,130,246,0.4)';
+      banner.style.color = 'var(--text)';
+    } else if (type === 'error') {
+      banner.style.background = 'rgba(239,68,68,0.15)';
+      banner.style.border = '1px solid rgba(239,68,68,0.4)';
+      banner.style.color = 'var(--text)';
+    }
+    banner.innerHTML = html;
+    banner.style.display = 'flex';
+  }
+
+  function hideLocationBanner() {
+    const banner = document.getElementById('location-banner');
+    if (banner) {
+      banner.style.opacity = '0';
+      setTimeout(() => banner.remove(), 400);
+    }
+  }
+
+  // Global retry handler
+  window.retryLocation = async function() {
+    sessionStorage.removeItem('userCoords');
+    userCoords = null;
+    hideLocationBanner();
+    await loadMapData();
+  };
+
 
   function getPlaceIcon(category, isActive = false) {
     let emoji = '🏢';
@@ -563,32 +625,36 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    // Clear mock roads elements
-    const mapCanvas = document.getElementById('map-canvas');
-    if (mapCanvas) {
-      mapCanvas.innerHTML = '';
-    }
-
     leafletMap = L.map('map-canvas', {
       zoomControl: true,
-      attributionControl: false
+      attributionControl: true
     }).setView([centerLat, centerLng], 14);
 
-    // Always use light (Voyager) tiles so the map is readable in both light & dark mode
-    const LIGHT_TILES = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-    L.tileLayer(LIGHT_TILES, { maxZoom: 19 }).addTo(leafletMap);
+    // Use free OpenStreetMap tiles (no API key required)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(leafletMap);
   }
 
   async function loadMapData() {
-    placesList.innerHTML = '<p class="loading">Loading nearby directory...</p>';
+    placesList.innerHTML = '<p class="loading">Detecting your location...</p>';
     
     try {
       if (!userCoords) {
         userCoords = await getUserLiveLocation();
       }
 
+      // If still no coords after geolocation attempt, show fallback notice
+      const usingFallback = !userCoords;
       const centerLat = userCoords ? userCoords.lat : 40.7128;
       const centerLng = userCoords ? userCoords.lng : -74.0060;
+
+      if (usingFallback) {
+        placesList.innerHTML = '<p class="loading">Location unavailable — showing example nearby places.</p>';
+      } else {
+        placesList.innerHTML = '<p class="loading">Loading nearby directory...</p>';
+      }
 
       initLeafletMap(centerLat, centerLng);
 

@@ -1777,11 +1777,21 @@ textarea {
   position: relative;
   width: 100%;
   aspect-ratio: 4/3;
+  min-height: 400px;
   background: #0d121c;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+.map-canvas-container #map-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: var(--radius);
+  z-index: 1;
 }
 
 .map-grid-overlay {
