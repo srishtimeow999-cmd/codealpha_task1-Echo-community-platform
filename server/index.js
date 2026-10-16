@@ -14,6 +14,8 @@ const notificationRoutes = require('./routes/notifications');
 const communityRoutes = require('./routes/communities');
 const placeRoutes = require('./routes/places');
 const eventRoutes = require('./routes/events');
+const footprintRoutes = require('./routes/footprint');
+const helphubRoutes = require('./routes/helphub');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,6 +37,8 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/communities', communityRoutes);
 app.use('/api/places', placeRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/footprint', footprintRoutes);
+app.use('/api/helphub', helphubRoutes);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', app: 'Echo' });

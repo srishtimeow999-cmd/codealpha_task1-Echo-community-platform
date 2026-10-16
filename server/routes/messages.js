@@ -103,6 +103,28 @@ router.post('/with/:userId', protect, async (req, res) => {
       return res.status(400).json({ message: 'Cannot message yourself' });
     }
 
+    // Block check — if recipient blocked the sender, silently fail with 403
+    const blockedBySender = other.blockedUsers?.some(
+      (id) => id.toString() === req.user._id.toString()
+    );
+    if (blockedBySender) {
+      return res.status(403).json({ message: 'You cannot message this user' });
+    }
+
+    // Enforce messagingPermission on recipient
+    const msgPerm = other.privacy?.messagingPermission ?? 'everyone';
+    if (msgPerm === 'none') {
+      return res.status(403).json({ message: 'This user is not accepting messages' });
+    }
+    if (msgPerm === 'followers') {
+      const isFollower = other.followers?.some(
+        (id) => id.toString() === req.user._id.toString()
+      );
+      if (!isFollower) {
+        return res.status(403).json({ message: 'This user only accepts messages from followers' });
+      }
+    }
+
     const conversation = await findOrCreateConversation(req.user._id, other._id);
     const trimmed = text.trim();
 

@@ -5,7 +5,9 @@
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
-    "dev": "node --watch server/index.js"
+    "dev": "node --watch server/index.js",
+    "test:footprint": "node server/tests/footprint.test.js",
+    "test:helphub": "node server/tests/helphub.test.js"
   },
   "keywords": ["social", "express", "mongodb"],
   "license": "MIT",

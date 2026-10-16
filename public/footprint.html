@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Footprint — Echo</title>
+  <meta name="description" content="Review and manage your Echo activity, privacy settings, and account security all in one place.">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <h1 class="logo" aria-label="Echo"></h1>
+      <ul class="nav-links" id="nav-links"></ul>
+      <div class="sidebar-user" id="nav-user"></div>
+    </aside>
+
+    <div class="app-main">
+      <header class="mobile-header">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+        <span class="logo logo-inline" aria-label="Echo"></span>
+        <span></span>
+      </header>
+
+      <main class="main-content fp-main" id="fp-main">
+
+        <!-- Page heading -->
+        <div class="fp-page-header">
+          <div>
+            <h1 class="page-heading fp-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-title-icon" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
+              Digital Footprint
+            </h1>
+            <p class="fp-subtitle">Your activity, privacy, and security — all in one place.</p>
+          </div>
+          <nav class="fp-tabs" role="tablist" aria-label="Footprint sections">
+            <button class="fp-tab active" data-tab="dashboard" id="tab-dashboard" role="tab" aria-selected="true" aria-controls="panel-dashboard">Dashboard</button>
+            <button class="fp-tab" data-tab="privacy" id="tab-privacy" role="tab" aria-selected="false" aria-controls="panel-privacy">Privacy</button>
+            <button class="fp-tab" data-tab="security" id="tab-security" role="tab" aria-selected="false" aria-controls="panel-security">Security</button>
+          </nav>
+        </div>
+
+        <!-- Loading skeleton -->
+        <div id="fp-loading" class="fp-loading" aria-live="polite" aria-label="Loading your footprint data">
+          <div class="fp-skeleton fp-skeleton--wide"></div>
+          <div class="fp-skeleton-row">
+            <div class="fp-skeleton fp-skeleton--card"></div>
+            <div class="fp-skeleton fp-skeleton--card"></div>
+            <div class="fp-skeleton fp-skeleton--card"></div>
+            <div class="fp-skeleton fp-skeleton--card"></div>
+          </div>
+          <div class="fp-skeleton fp-skeleton--block"></div>
+        </div>
+
+        <!-- ─── PANEL 1: DASHBOARD ──────────────────────────────────────── -->
+        <div id="panel-dashboard" class="fp-panel" role="tabpanel" aria-labelledby="tab-dashboard" hidden>
+
+          <!-- Stats bar -->
+          <div class="fp-stats-grid" id="fp-stats-grid"></div>
+
+          <!-- Profile review -->
+          <section class="fp-section" id="section-profile">
+            <div class="fp-section-header">
+              <h2 class="fp-section-title">Public Profile</h2>
+              <a href="/settings.html" class="btn btn-secondary btn-sm fp-edit-link">Edit profile</a>
+            </div>
+            <div class="fp-profile-card" id="fp-profile-card"></div>
+          </section>
+
+          <!-- Recent posts -->
+          <section class="fp-section" id="section-posts">
+            <div class="fp-section-header">
+              <h2 class="fp-section-title">Your Posts</h2>
+              <span class="fp-count-badge" id="posts-count-badge"></span>
+            </div>
+            <div id="fp-posts-list" class="fp-list"></div>
+            <p id="fp-posts-empty" class="fp-empty" hidden>You haven't posted anything yet.</p>
+          </section>
+
+          <!-- Recent comments -->
+          <section class="fp-section" id="section-comments">
+            <div class="fp-section-header">
+              <h2 class="fp-section-title">Your Comments</h2>
+              <span class="fp-count-badge" id="comments-count-badge"></span>
+            </div>
+            <div id="fp-comments-list" class="fp-list"></div>
+            <p id="fp-comments-empty" class="fp-empty" hidden>You haven't commented on anything yet.</p>
+          </section>
+
+          <!-- Joined communities -->
+          <section class="fp-section" id="section-communities">
+            <div class="fp-section-header">
+              <h2 class="fp-section-title">Joined Communities</h2>
+              <span class="fp-count-badge" id="communities-count-badge"></span>
+            </div>
+            <div id="fp-communities-list" class="fp-communities-grid"></div>
+            <p id="fp-communities-empty" class="fp-empty" hidden>You haven't joined any communities yet.</p>
+          </section>
+        </div>
+
+        <!-- ─── PANEL 2: PRIVACY ────────────────────────────────────────── -->
+        <div id="panel-privacy" class="fp-panel" role="tabpanel" aria-labelledby="tab-privacy" hidden>
+
+          <section class="fp-section">
+            <div class="fp-section-header">
+              <h2 class="fp-section-title">Profile Visibility</h2>
+            </div>
+            <p class="fp-help-text">Controls who can view your full profile. Changes are enforced immediately on the server.</p>
+            <div class="fp-radio-group" id="visibility-group" role="radiogroup" aria-label="Profile visibility">
+              <label class="fp-radio-option">
+                <input type="radio" name="profileVisibility" value="public" id="vis-public">
+                <div class="fp-radio-content">
+                  <div class="fp-radio-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-option-icon" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    Public
+                  </div>
+                  <span class="fp-radio-desc">Anyone on Echo can view your profile.</span>
+                </div>
+              </label>
+              <label class="fp-radio-option">
+                <input type="radio" name="profileVisibility" value="followers" id="vis-followers">
+                <div class="fp-radio-content">
+                  <div class="fp-radio-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-option-icon" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Followers only
+                  </div>
+                  <span class="fp-radio-desc">Only people who follow you can view your profile.</span>
+                </div>
+              </label>
+              <label class="fp-radio-option">
+                <input type="radio" name="profileVisibility" value="private" id="vis-private">
+                <div class="fp-radio-content">
+                  <div class="fp-radio-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-option-icon" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    Private
+                  </div>
+                  <span class="fp-radio-desc">No one else can view your profile.</span>
+                </div>
+              </label>
+            </div>
+          </section>
+
+          <section class="fp-section">
+            <div class="fp-section-header">
+              <h2 class="fp-section-title">Messaging Permissions</h2>
+            </div>
+            <p class="fp-help-text">Controls who can send you direct messages. Enforced on the server.</p>
+            <div class="fp-radio-group" id="messaging-group" role="radiogroup" aria-label="Messaging permissions">
+              <label class="fp-radio-option">
+                <input type="radio" name="messagingPermission" value="everyone" id="msg-everyone">
+                <div class="fp-radio-content">
+                  <div class="fp-radio-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-option-icon" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Everyone
+                  </div>
+                  <span class="fp-radio-desc">Any Echo user can message you.</span>
+                </div>
+              </label>
+              <label class="fp-radio-option">
+                <input type="radio" name="messagingPermission" value="followers" id="msg-followers">
+                <div class="fp-radio-content">
+                  <div class="fp-radio-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-option-icon" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    Followers only
+                  </div>
+                  <span class="fp-radio-desc">Only people you follow back can message you.</span>
+                </div>
+              </label>
+              <label class="fp-radio-option">
+                <input type="radio" name="messagingPermission" value="none" id="msg-none">
+                <div class="fp-radio-content">
+                  <div class="fp-radio-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-option-icon" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    Nobody
+                  </div>
+                  <span class="fp-radio-desc">Turn off direct messages entirely.</span>
+                </div>
+              </label>
+            </div>
+            <button id="save-privacy-btn" class="btn btn-primary btn-sm fp-save-btn">Save Privacy Settings</button>
+            <p class="fp-save-status" id="privacy-save-status" role="status" aria-live="polite"></p>
+          </section>
+
+          <!-- Blocked users -->
+          <section class="fp-section" id="section-blocked">
+            <div class="fp-section-header">
+              <h2 class="fp-section-title">Blocked Users</h2>
+              <span class="fp-count-badge" id="blocked-count-badge"></span>
+            </div>
+            <p class="fp-help-text">Blocked users cannot view your profile, send you messages, or appear in your interactions.</p>
+            <div id="fp-blocked-list" class="fp-list"></div>
+            <p id="fp-blocked-empty" class="fp-empty" hidden>You haven't blocked anyone.</p>
+          </section>
+        </div>
+
+        <!-- ─── PANEL 3: SECURITY ───────────────────────────────────────── -->
+        <div id="panel-security" class="fp-panel" role="tabpanel" aria-labelledby="tab-security" hidden>
+
+          <section class="fp-section">
+            <h2 class="fp-section-title">Account Security Status</h2>
+            <p class="fp-help-text">Only security features that are actually implemented are listed here. No claims are made about unimplemented capabilities.</p>
+            <div id="fp-security-list" class="fp-security-grid"></div>
+          </section>
+
+          <section class="fp-section">
+            <div class="fp-section-header">
+              <h2 class="fp-section-title">Change Password</h2>
+            </div>
+            <p class="fp-help-text">Your password is stored as a bcrypt hash — it is never stored in plain text.</p>
+            <form id="fp-password-form" class="fp-password-form" novalidate>
+              <div class="form-group">
+                <label for="fp-new-password">New Password <span class="fp-required">*</span></label>
+                <input type="password" id="fp-new-password" name="password" minlength="6" placeholder="At least 6 characters" autocomplete="new-password">
+              </div>
+              <div class="form-group">
+                <label for="fp-confirm-password">Confirm New Password <span class="fp-required">*</span></label>
+                <input type="password" id="fp-confirm-password" name="confirmPassword" minlength="6" placeholder="Repeat password" autocomplete="new-password">
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm" id="fp-password-btn">Update Password</button>
+              <p class="fp-save-status" id="password-save-status" role="status" aria-live="polite"></p>
+            </form>
+          </section>
+
+          <section class="fp-section fp-section--notice">
+            <h2 class="fp-section-title">What is not yet implemented</h2>
+            <ul class="fp-notice-list">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-notice-icon" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <div><strong>Email verification</strong> — accounts are not currently verified by email.</div>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-notice-icon" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <div><strong>Two-factor authentication (2FA)</strong> — not yet available.</div>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-notice-icon" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <div><strong>Session management</strong> — JWTs are stateless. There is no server-side session list, so individual sessions cannot be revoked. Changing your password does not invalidate existing tokens.</div>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-notice-icon" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <div><strong>Profile visitor tracking</strong> — Echo does not track who views your profile.</div>
+              </li>
+            </ul>
+          </section>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/layout.js"></script>
+  <script src="/js/footprint.js"></script>
+</body>
+</html>

@@ -48,6 +48,21 @@ const userSchema = new mongoose.Schema(
     savedPlaces: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Place' }],
     joinedCommunities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Community' }],
     joinedEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
+
+    // Privacy & security settings
+    privacy: {
+      profileVisibility: {
+        type: String,
+        enum: ['public', 'followers', 'private'],
+        default: 'public',
+      },
+      messagingPermission: {
+        type: String,
+        enum: ['everyone', 'followers', 'none'],
+        default: 'everyone',
+      },
+    },
+    blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   },
   { timestamps: true }
 );
@@ -73,6 +88,19 @@ userSchema.methods.toPublic = function () {
     followersCount: this.followers.length,
     followingCount: this.following.length,
     createdAt: this.createdAt,
+  };
+};
+
+// Returns the signed-in user's own private profile (includes privacy settings)
+userSchema.methods.toPrivate = function () {
+  return {
+    ...this.toPublic(),
+    email: this.email,
+    privacy: this.privacy || { profileVisibility: 'public', messagingPermission: 'everyone' },
+    blockedUsersCount: (this.blockedUsers || []).length,
+    savedPostsCount: (this.savedPosts || []).length,
+    joinedCommunitiesCount: (this.joinedCommunities || []).length,
+    joinedEventsCount: (this.joinedEvents || []).length,
   };
 };
 

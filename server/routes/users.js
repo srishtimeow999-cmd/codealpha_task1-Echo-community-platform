@@ -70,14 +70,37 @@ router.get('/:username', protect, async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    const isOwnProfile = user._id.toString() === req.user._id.toString();
+
+    // Block check — blocked users see a 404 instead of a 403 to avoid enumeration
+    if (!isOwnProfile) {
+      const blockedBy = user.blockedUsers?.some(
+        (id) => id.toString() === req.user._id.toString()
+      );
+      if (blockedBy) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+    }
+
     const isFollowing = user.followers.some(
       (id) => id.toString() === req.user._id.toString()
     );
 
+    // Enforce profileVisibility
+    if (!isOwnProfile) {
+      const visibility = user.privacy?.profileVisibility ?? 'public';
+      if (visibility === 'private') {
+        return res.status(403).json({ message: 'This profile is private' });
+      }
+      if (visibility === 'followers' && !isFollowing) {
+        return res.status(403).json({ message: 'This profile is only visible to followers' });
+      }
+    }
+
     res.json({
       user: user.toPublic(),
       isFollowing,
-      isOwnProfile: user._id.toString() === req.user._id.toString(),
+      isOwnProfile,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
