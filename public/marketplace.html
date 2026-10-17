@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Echo Marketplace — Buy and Sell Locally</title>
+  <meta name="description" content="Discover, buy, and sell items locally on Echo Marketplace. Electronics, furniture, vehicles, free items, and more with direct buyer-to-seller messaging.">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <h1 class="logo" aria-label="Echo"></h1>
+      <ul class="nav-links" id="nav-links"></ul>
+      <div class="sidebar-user" id="nav-user"></div>
+    </aside>
+
+    <div class="app-main">
+      <header class="mobile-header">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+        <span class="logo logo-inline" aria-label="Echo"></span>
+        <button class="btn btn-primary btn-sm" id="btn-mobile-sell">+ Sell</button>
+      </header>
+
+      <main class="main-content mp-main" id="mp-main">
+        <!-- Marketplace Top Navigation & Actions Bar -->
+        <div class="mp-top-bar">
+          <div class="mp-top-left">
+            <h1 class="mp-title">
+              <span class="mp-title-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                  <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
+                  <path d="M2 7h20"/>
+                </svg>
+              </span>
+              Marketplace
+            </h1>
+            <div class="mp-location-badge" id="mp-location-display" title="Campus & Local Neighborhood">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mp-mini-pin">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <span>Within 10 miles • Local Campus & City</span>
+            </div>
+          </div>
+
+          <div class="mp-top-actions">
+            <button class="btn btn-primary btn-sm mp-btn-sell" id="btn-create-listing">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              <span>Create Listing</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Layout Container: Left Filters Rail + Right Content Feed -->
+        <div class="mp-layout-container">
+          <!-- Left Rail / Filters -->
+          <aside class="mp-sidebar-rail" aria-label="Marketplace Filters">
+            <!-- Search bar -->
+            <div class="mp-search-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mp-search-icon">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" id="mp-search-input" class="mp-search-input" placeholder="Search Marketplace..." autocomplete="off">
+              <button class="mp-search-clear" id="mp-search-clear" aria-label="Clear search" style="display:none;">&times;</button>
+            </div>
+
+            <!-- Quick Navigation Hub -->
+            <div class="mp-rail-section">
+              <div class="mp-rail-heading">Explore</div>
+              <ul class="mp-nav-pills" id="mp-view-tabs">
+                <li>
+                  <button class="mp-nav-pill active" data-filter="all">
+                    <span class="mp-pill-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                        <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
+                        <path d="M2 7h20"/>
+                      </svg>
+                    </span>
+                    <span>Browse All</span>
+                  </button>
+                </li>
+                <li>
+                  <button class="mp-nav-pill" data-filter="free">
+                    <span class="mp-pill-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 12 20 22 4 22 4 12"/>
+                        <rect width="20" height="5" x="2" y="7"/>
+                        <line x1="12" y1="22" x2="12" y2="7"/>
+                      </svg>
+                    </span>
+                    <span>Free Stuff</span>
+                  </button>
+                </li>
+                <li>
+                  <button class="mp-nav-pill" data-filter="saved">
+                    <span class="mp-pill-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                      </svg>
+                    </span>
+                    <span>Saved Items</span>
+                  </button>
+                </li>
+                <li>
+                  <button class="mp-nav-pill" data-filter="mine">
+                    <span class="mp-pill-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/>
+                        <circle cx="7" cy="7" r=".5" fill="currentColor"/>
+                      </svg>
+                    </span>
+                    <span>Your Listings</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Categories Section -->
+            <div class="mp-rail-section">
+              <div class="mp-rail-heading">Categories</div>
+              <ul class="mp-cat-list" id="mp-categories-list">
+                <!-- Injected via JavaScript with counts -->
+              </ul>
+            </div>
+
+            <!-- Price Filter Section -->
+            <div class="mp-rail-section">
+              <div class="mp-rail-heading">Price Range</div>
+              <div class="mp-price-inputs">
+                <div class="mp-input-wrap">
+                  <span class="mp-currency">$</span>
+                  <input type="number" id="mp-price-min" placeholder="Min" min="0" step="1">
+                </div>
+                <span class="mp-price-sep">to</span>
+                <div class="mp-input-wrap">
+                  <span class="mp-currency">$</span>
+                  <input type="number" id="mp-price-max" placeholder="Max" min="0" step="1">
+                </div>
+              </div>
+              <label class="mp-checkbox-label">
+                <input type="checkbox" id="mp-free-only">
+                <span>Free items only ($0)</span>
+              </label>
+              <button class="btn btn-secondary btn-sm mp-btn-apply-price" id="btn-apply-price">Apply</button>
+            </div>
+
+            <!-- Condition Filter -->
+            <div class="mp-rail-section">
+              <div class="mp-rail-heading">Item Condition</div>
+              <div class="mp-condition-pills" id="mp-condition-pills">
+                <button class="mp-cond-pill active" data-condition="all">All</button>
+                <button class="mp-cond-pill" data-condition="New">New</button>
+                <button class="mp-cond-pill" data-condition="Like New">Like New</button>
+                <button class="mp-cond-pill" data-condition="Good">Good</button>
+                <button class="mp-cond-pill" data-condition="Fair">Fair</button>
+              </div>
+            </div>
+
+            <!-- Delivery Preference -->
+            <div class="mp-rail-section">
+              <div class="mp-rail-heading">Delivery Method</div>
+              <select id="mp-delivery-filter" class="form-select mp-select">
+                <option value="all">Any delivery method</option>
+                <option value="Local pickup">Local pickup</option>
+                <option value="Public meetup">Public meetup</option>
+                <option value="Drop-off available">Drop-off available</option>
+                <option value="Shipping available">Shipping available</option>
+              </select>
+            </div>
+
+            <button class="btn btn-outline btn-sm mp-btn-reset" id="btn-reset-filters">
+              Reset All Filters
+            </button>
+          </aside>
+
+          <!-- Right Content Area -->
+          <section class="mp-content-area" aria-label="Marketplace Listings Feed">
+            <!-- Feed Subheader: Title, Active Pills & Sort -->
+            <div class="mp-feed-header">
+              <div class="mp-feed-title-wrap">
+                <h2 class="mp-feed-title" id="mp-feed-title">Today's Picks</h2>
+                <span class="mp-feed-count" id="mp-results-count">Loading items...</span>
+              </div>
+
+              <!-- Horizontal Quick Category Chips (Mobile & Desktop) -->
+              <div class="mp-quick-chips-scroll" id="mp-quick-chips">
+                <!-- Injected via JS -->
+              </div>
+
+              <div class="mp-feed-controls">
+                <div class="mp-active-filters" id="mp-active-filters-chips"></div>
+                <div class="mp-sort-wrap">
+                  <label for="mp-sort-select">Sort by:</label>
+                  <select id="mp-sort-select" class="mp-select mp-sort-select">
+                    <option value="newest">Newest first</option>
+                    <option value="price_low">Price: Low to High</option>
+                    <option value="price_high">Price: High to Low</option>
+                    <option value="popular">Most Popular</option>
+                    <option value="oldest">Oldest first</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Listings Grid -->
+            <div class="mp-grid" id="mp-listings-grid">
+              <!-- Cards or Skeleton will be injected here -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="mp-empty-state" id="mp-empty-state" style="display:none;">
+              <div class="mp-empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mp-empty-svg">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                  <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+              </div>
+              <h3 class="mp-empty-title">No listings found</h3>
+              <p class="mp-empty-desc" id="mp-empty-desc">
+                We couldn't find any items matching your current filters. Try expanding your search or be the first to list an item!
+              </p>
+              <div class="mp-empty-actions">
+                <button class="btn btn-secondary" id="btn-empty-clear">Clear Filters</button>
+                <button class="btn btn-primary" id="btn-empty-create">+ Create Listing</button>
+              </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mp-pagination" id="mp-pagination" style="display:none;">
+              <button class="btn btn-secondary btn-sm" id="btn-prev-page" disabled>&larr; Previous</button>
+              <span class="mp-page-indicator" id="mp-page-indicator">Page 1 of 1</span>
+              <button class="btn btn-secondary btn-sm" id="btn-next-page">Next &rarr;</button>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       MODAL 1: VIEW LISTING DETAILS & FACEBOOK MARKETPLACE INQUIRY
+       ══════════════════════════════════════════════════════════════════════════ -->
+  <div class="modal-backdrop" id="modal-detail-backdrop" style="display:none;">
+    <div class="modal mp-detail-modal" id="modal-item-detail" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+      <button class="modal-close" id="btn-close-detail" aria-label="Close dialog">&times;</button>
+      
+      <div class="mp-detail-container">
+        <!-- Left: Image Gallery -->
+        <div class="mp-detail-gallery">
+          <div class="mp-gallery-hero">
+            <img id="detail-hero-img" src="" alt="Listing photo">
+            <div class="mp-hero-badge" id="detail-status-badge">Available</div>
+          </div>
+          <div class="mp-gallery-thumbs" id="detail-thumbs"></div>
+        </div>
+
+        <!-- Right: Listing Info & Facebook Marketplace Inquire Box -->
+        <div class="mp-detail-info">
+          <div class="mp-detail-header">
+            <div class="mp-detail-price" id="detail-price">$0</div>
+            <h2 class="mp-detail-title" id="detail-title">Listing Title</h2>
+            <div class="mp-detail-tags">
+              <span class="mp-pill-tag" id="detail-category">Category</span>
+              <span class="mp-pill-tag mp-pill-condition" id="detail-condition">Good</span>
+              <span class="mp-pill-tag mp-pill-delivery" id="detail-delivery">Local pickup</span>
+            </div>
+            <div class="mp-detail-meta-row">
+              <span class="mp-meta-loc" id="detail-location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mp-mini-pin">
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span id="detail-location-text">Campus</span>
+              </span>
+              <span class="mp-meta-bullet">•</span>
+              <span class="mp-meta-date" id="detail-date">Listed recently</span>
+              <span class="mp-meta-bullet">•</span>
+              <span class="mp-meta-views" id="detail-views">0 views</span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mp-detail-section">
+            <h3 class="mp-section-label">Description</h3>
+            <p class="mp-detail-description" id="detail-description"></p>
+          </div>
+
+          <!-- Seller Profile Card -->
+          <div class="mp-detail-section mp-seller-card" id="detail-seller-box">
+            <h3 class="mp-section-label">Seller Information</h3>
+            <div class="mp-seller-inner">
+              <img id="detail-seller-avatar" class="avatar avatar-md" src="/images/default-avatar.svg" alt="Seller avatar">
+              <div class="mp-seller-meta">
+                <a href="#" id="detail-seller-link" class="mp-seller-name">Seller Name</a>
+                <span class="mp-seller-sub" id="detail-seller-joined">Joined recently</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Facebook Marketplace Buyer Inquire Box (For non-owners) -->
+          <div class="mp-inquire-box" id="mp-inquire-box">
+            <div class="mp-inquire-header">
+              <span class="mp-inquire-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mp-inquire-svg">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+              </span>
+              <strong>Send seller a message</strong>
+            </div>
+            <div class="mp-quick-prompts">
+              <button type="button" class="mp-prompt-chip" data-msg="Hi, is this still available?">"Is this available?"</button>
+              <button type="button" class="mp-prompt-chip" data-msg="Hi! Is the price negotiable?">"Is price negotiable?"</button>
+              <button type="button" class="mp-prompt-chip" data-msg="Hi! Where can we meet for pickup?">"Where for pickup?"</button>
+            </div>
+            <form id="form-inquire" class="mp-inquire-form">
+              <textarea id="inquire-message" class="form-textarea mp-inquire-textarea" rows="2" placeholder="Send a message to the seller..." required>Hi, is this still available?</textarea>
+              <button type="submit" class="btn btn-primary mp-btn-send-inquire" id="btn-send-inquire">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+                <span>Send Message</span>
+              </button>
+            </form>
+            <div id="inquire-feedback" class="mp-inquire-feedback" style="display:none;"></div>
+          </div>
+
+          <!-- Owner Management Toolbar (If viewing own listing) -->
+          <div class="mp-owner-panel" id="mp-owner-panel" style="display:none;">
+            <div class="mp-owner-panel-title">Manage Your Listing</div>
+            <div class="mp-owner-status-row">
+              <label for="detail-status-select">Status:</label>
+              <select id="detail-status-select" class="mp-select">
+                <option value="Available">Available</option>
+                <option value="Pending">Pending Sale</option>
+                <option value="Sold">Mark as Sold</option>
+              </select>
+              <button class="btn btn-secondary btn-sm" id="btn-update-status">Update Status</button>
+            </div>
+            <div class="mp-owner-buttons">
+              <button class="btn btn-secondary" id="btn-edit-listing">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit Listing
+              </button>
+              <button class="btn btn-danger" id="btn-delete-listing">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+                Delete
+              </button>
+            </div>
+          </div>
+
+          <!-- Action Buttons Bar: Save, Share, Report -->
+          <div class="mp-detail-actions-bar">
+            <button class="btn btn-secondary mp-btn-save-action" id="btn-toggle-save">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon mp-heart-icon">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+              </svg>
+              <span id="save-btn-text">Save Item</span>
+            </button>
+            <button class="btn btn-secondary" id="btn-share-listing" title="Copy link to clipboard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+                <circle cx="18" cy="5" r="3"/>
+                <circle cx="6" cy="12" r="3"/>
+                <circle cx="18" cy="19" r="3"/>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+              </svg>
+              Share
+            </button>
+            <button class="btn btn-outline mp-btn-report-action" id="btn-report-listing" title="Report inappropriate listing">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                <line x1="4" y1="22" x2="4" y2="15"/>
+              </svg>
+              Report
+            </button>
+          </div>
+
+          <!-- More from this seller -->
+          <div class="mp-detail-section mp-more-seller-section" id="detail-more-seller" style="display:none;">
+            <h3 class="mp-section-label">More from this seller</h3>
+            <div class="mp-more-seller-grid" id="detail-more-seller-grid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       MODAL 2: CREATE / EDIT LISTING
+       ══════════════════════════════════════════════════════════════════════════ -->
+  <div class="modal-backdrop" id="modal-create-backdrop" style="display:none;">
+    <div class="modal mp-create-modal" id="modal-create-listing-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-listing-form-title">
+      <button class="modal-close" id="btn-close-create" aria-label="Close dialog">&times;</button>
+      
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-listing-form-title">Create New Listing</h2>
+        <p class="modal-subtitle">Post an item for sale or give away for free in your local community.</p>
+      </div>
+
+      <form id="form-listing" class="modal-body mp-form-body">
+        <input type="hidden" id="edit-listing-id" value="">
+
+        <!-- Photos Section -->
+        <div class="form-group">
+          <label class="form-label">
+            Photos <span class="mp-req-star">*</span>
+            <span class="form-hint">Upload photos or paste a photo URL. Up to 8 photos.</span>
+          </label>
+          <div class="mp-photo-uploader" id="mp-photo-dropzone">
+            <div class="mp-photo-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mp-upload-icon">
+                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                <circle cx="9" cy="9" r="2"/>
+                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+              </svg>
+              <span>Click to select photos or drag & drop</span>
+              <span class="mp-upload-sub">PNG, JPG, WEBP up to 5MB</span>
+            </div>
+            <input type="file" id="listing-file-input" multiple accept="image/*" class="mp-file-hidden">
+          </div>
+          <!-- Or photo URL input -->
+          <div class="mp-url-input-wrap">
+            <input type="url" id="listing-image-url" class="form-input" placeholder="Or paste an image web link (https://...)">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-add-img-url">Add URL</button>
+          </div>
+          <!-- Preview container -->
+          <div class="mp-photo-preview-grid" id="mp-photo-previews"></div>
+        </div>
+
+        <!-- Title -->
+        <div class="form-group">
+          <label for="listing-title" class="form-label">Title <span class="mp-req-star">*</span></label>
+          <input type="text" id="listing-title" class="form-input" placeholder="e.g. MacBook Air M2 13-inch Space Gray" minlength="3" maxlength="120" required>
+        </div>
+
+        <!-- Price & Category Row -->
+        <div class="form-row">
+          <div class="form-col">
+            <label for="listing-price" class="form-label">Price ($) <span class="mp-req-star">*</span></label>
+            <div class="mp-input-wrap">
+              <span class="mp-currency">$</span>
+              <input type="number" id="listing-price" class="form-input" placeholder="0" min="0" step="any" required>
+            </div>
+            <label class="mp-checkbox-label mp-inline-free">
+              <input type="checkbox" id="listing-is-free">
+              <span>This item is FREE ($0)</span>
+            </label>
+          </div>
+          <div class="form-col">
+            <label for="listing-category" class="form-label">Category <span class="mp-req-star">*</span></label>
+            <select id="listing-category" class="form-select" required>
+              <option value="">Select a category</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Vehicles">Vehicles</option>
+              <option value="Home & Garden">Home & Garden</option>
+              <option value="Clothing & Accessories">Clothing & Accessories</option>
+              <option value="Furniture">Furniture</option>
+              <option value="Books & Hobbies">Books & Hobbies</option>
+              <option value="Toys & Games">Toys & Games</option>
+              <option value="Free Stuff">Free Stuff</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Condition & Delivery Row -->
+        <div class="form-row">
+          <div class="form-col">
+            <label for="listing-condition" class="form-label">Condition <span class="mp-req-star">*</span></label>
+            <select id="listing-condition" class="form-select" required>
+              <option value="New">New (Unopened, never used)</option>
+              <option value="Like New" selected>Like New (No signs of wear)</option>
+              <option value="Good">Good (Minor wear, fully functional)</option>
+              <option value="Fair">Fair (Noticeable wear, still usable)</option>
+            </select>
+          </div>
+          <div class="form-col">
+            <label for="listing-delivery" class="form-label">Delivery / Pickup</label>
+            <select id="listing-delivery" class="form-select">
+              <option value="Local pickup" selected>Local pickup (Buyer picks up)</option>
+              <option value="Public meetup">Public meetup (Meet in public place)</option>
+              <option value="Drop-off available">Drop-off available (Seller can drop off)</option>
+              <option value="Shipping available">Shipping available</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="form-group">
+          <label for="listing-location" class="form-label">Location / Neighborhood <span class="mp-req-star">*</span></label>
+          <input type="text" id="listing-location" class="form-input" placeholder="e.g. North Campus, Downtown, or East District" maxlength="120" required>
+          <span class="form-hint">For your privacy and safety, enter a general area or neighborhood rather than your full private home address.</span>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="listing-description" class="form-label">Description <span class="mp-req-star">*</span></label>
+          <textarea id="listing-description" class="form-textarea" rows="4" placeholder="Describe your item: brand, specs, reason for selling, inclusions, and condition..." minlength="5" maxlength="4000" required></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-create">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-submit-listing">Publish Listing</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       MODAL 3: REPORT LISTING
+       ══════════════════════════════════════════════════════════════════════════ -->
+  <div class="modal-backdrop" id="modal-report-backdrop" style="display:none;">
+    <div class="modal mp-report-modal" id="modal-report-dialog" role="dialog" aria-modal="true" aria-labelledby="report-dialog-title">
+      <button class="modal-close" id="btn-close-report" aria-label="Close dialog">&times;</button>
+      <div class="modal-header">
+        <h2 class="modal-title" id="report-dialog-title">Report Listing</h2>
+        <p class="modal-subtitle">Help keep Echo Marketplace safe and trustworthy.</p>
+      </div>
+      <form id="form-report-listing" class="modal-body">
+        <input type="hidden" id="report-listing-id" value="">
+        <div class="form-group">
+          <label for="report-reason" class="form-label">Why are you reporting this item?</label>
+          <select id="report-reason" class="form-select" required>
+            <option value="spam">Spam or misleading content</option>
+            <option value="fraud_or_scam">Suspected fraud or scam</option>
+            <option value="prohibited_item">Prohibited item</option>
+            <option value="inappropriate">Offensive or inappropriate</option>
+            <option value="other">Other issue</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="report-details" class="form-label">Additional Details (Optional)</label>
+          <textarea id="report-details" class="form-textarea" rows="3" placeholder="Provide extra context if helpful..." maxlength="500"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-report">Cancel</button>
+          <button type="submit" class="btn btn-danger" id="btn-submit-report">Submit Report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="mp-toast-container" id="mp-toast-container" aria-live="polite"></div>
+
+  <!-- Client-side Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/layout.js"></script>
+  <script src="/js/marketplace.js"></script>
+</body>
+</html>

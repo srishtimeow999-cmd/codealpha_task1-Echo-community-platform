@@ -46,6 +46,7 @@ const userSchema = new mongoose.Schema(
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     savedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     savedPlaces: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Place' }],
+    savedListings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Listing' }],
     joinedCommunities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Community' }],
     joinedEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
 
@@ -99,6 +100,7 @@ userSchema.methods.toPrivate = function () {
     privacy: this.privacy || { profileVisibility: 'public', messagingPermission: 'everyone' },
     blockedUsersCount: (this.blockedUsers || []).length,
     savedPostsCount: (this.savedPosts || []).length,
+    savedListingsCount: (this.savedListings || []).length,
     joinedCommunitiesCount: (this.joinedCommunities || []).length,
     joinedEventsCount: (this.joinedEvents || []).length,
   };

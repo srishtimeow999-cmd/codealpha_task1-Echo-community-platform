@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Community = require('../models/Community');
 const Place = require('../models/Place');
 const Event = require('../models/Event');
+const Listing = require('../models/Listing');
+const User = require('../models/User');
 
 const mockCommunities = [
   {
@@ -201,6 +203,141 @@ const mockEvents = [
   }
 ];
 
+const mockListings = [
+  {
+    title: 'Apple MacBook Air 13" M2 (Space Gray, 256GB)',
+    price: 749,
+    category: 'Electronics',
+    condition: 'Like New',
+    description: 'Selling my MacBook Air M2 in pristine condition with 100% battery health. Comes with original MagSafe charger and packaging. Barely used for a summer coding project.',
+    location: 'Downtown Campus',
+    deliveryType: 'Public meetup',
+    images: ['https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80'],
+    status: 'Available',
+  },
+  {
+    title: 'Sony WH-1000XM4 Wireless Noise Canceling Headphones',
+    price: 160,
+    category: 'Electronics',
+    condition: 'Like New',
+    description: 'Industry leading noise cancellation headphones in black. Outstanding sound quality, clean cushions, includes protective hard case, aux cable, and USB-C cord.',
+    location: 'North Campus',
+    deliveryType: 'Local pickup',
+    images: ['https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800&q=80'],
+    status: 'Available',
+  },
+  {
+    title: 'Mid-Century Modern Velvet Armchair - Forest Green',
+    price: 130,
+    category: 'Furniture',
+    condition: 'Like New',
+    description: 'Gorgeous green velvet accent chair with tapered walnut legs. Extremely comfortable, smoke-free and pet-free home. Selling because moving to a furnished studio.',
+    location: 'East District',
+    deliveryType: 'Local pickup',
+    images: ['https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80'],
+    status: 'Available',
+  },
+  {
+    title: 'Solid Oak Coffee Table with Under-Shelf',
+    price: 75,
+    category: 'Furniture',
+    condition: 'Good',
+    description: 'Sturdy natural oak coffee table with bottom storage shelf for books and games. Dimensions: 42" W x 22" D x 18" H. Can assist loading into your vehicle.',
+    location: 'South Park',
+    deliveryType: 'Drop-off available',
+    images: ['https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=800&q=80'],
+    status: 'Available',
+  },
+  {
+    title: 'Canon EOS Rebel T7 DSLR Camera Kit with 18-55mm Lens',
+    price: 310,
+    category: 'Electronics',
+    condition: 'Like New',
+    description: 'Perfect camera for photography students or creators. 24.1 MP CMOS sensor, built-in Wi-Fi. Includes lens, battery, high-speed SanDisk 64GB SD card, and padded shoulder bag.',
+    location: 'Downtown',
+    deliveryType: 'Public meetup',
+    images: ['https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80'],
+    status: 'Available',
+  },
+  {
+    title: 'Vintage Levi\'s Denim Sherpa Trucker Jacket (Men\'s M)',
+    price: 45,
+    category: 'Clothing & Accessories',
+    condition: 'Good',
+    description: 'Classic medium wash sherpa lined denim jacket. Warm and broken in nicely with zero rips or stains. Standard fit, fits true to size.',
+    location: 'Uptown Village',
+    deliveryType: 'Shipping available',
+    images: ['https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&q=80'],
+    status: 'Available',
+  },
+  {
+    title: 'Trek FX 2 Disc Hybrid City Bike (54cm Frame)',
+    price: 380,
+    category: 'Vehicles',
+    condition: 'Good',
+    description: 'Reliable commuter bike with hydraulic disc brakes, lightweight aluminum frame, and Shimano 24-speed gears. Tuned up recently at local shop with new puncture-resistant tires.',
+    location: 'West Campus',
+    deliveryType: 'Local pickup',
+    images: ['https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=800&q=80'],
+    status: 'Available',
+  },
+  {
+    title: 'Free Heavy Duty Moving Boxes & Packing Bubble Wrap',
+    price: 0,
+    category: 'Free Stuff',
+    condition: 'Good',
+    description: 'Just finished moving! Giving away 14 clean medium/large cardboard boxes, packing paper, and bubble wrap. Must pick up all together by this evening.',
+    location: 'North Campus',
+    deliveryType: 'Local pickup',
+    images: ['https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80'],
+    status: 'Available',
+  },
+  {
+    title: 'Monstera Deliciosa Plant in White Ceramic Planter',
+    price: 25,
+    category: 'Home & Garden',
+    condition: 'New',
+    description: 'Healthy, thriving Monstera plant with 7 fenestrated leaves. Potted in premium soil mix with drainage hole and saucer. Very easy to care for.',
+    location: 'Midtown',
+    deliveryType: 'Local pickup',
+    images: ['https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=800&q=80'],
+    status: 'Available',
+  },
+  {
+    title: 'Nintendo Switch OLED (White) + Zelda & Mario Kart 8',
+    price: 275,
+    category: 'Toys & Games',
+    condition: 'Like New',
+    description: 'OLED model console with glass screen protector installed from day one. Includes dock, HDMI, two physical games, and carrying case. No stick drift.',
+    location: 'Downtown Square',
+    deliveryType: 'Public meetup',
+    images: ['https://images.unsplash.com/photo-1578303512597-8be9f190f452?w=800&q=80'],
+    status: 'Available',
+  },
+  {
+    title: 'Fender CD-60S Acoustic Guitar with Padded Gig Bag & Tuner',
+    price: 120,
+    category: 'Books & Hobbies',
+    condition: 'Good',
+    description: 'Solid spruce top with mahogany back and sides. Great projection and warm tone. Fresh D\'Addario light gauge strings installed. Ready to play.',
+    location: 'Arts District',
+    deliveryType: 'Local pickup',
+    images: ['https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=800&q=80'],
+    status: 'Available',
+  },
+  {
+    title: 'Dyson V8 Cordless Vacuum Cleaner with All Attachments',
+    price: 155,
+    category: 'Home & Garden',
+    condition: 'Good',
+    description: 'Deep cleaned and sanitized with clean washable HEPA filter. Battery holds full 35+ minute charge. Includes wall charging dock and motorized pet hair tool.',
+    location: 'South Hills',
+    deliveryType: 'Local pickup',
+    images: ['https://images.unsplash.com/photo-1558317374-067fb5f30001?w=800&q=80'],
+    status: 'Available',
+  }
+];
+
 async function seedData() {
   try {
     const communityCount = await Community.countDocuments();
@@ -219,9 +356,33 @@ async function seedData() {
       await Event.create(mockEvents);
       console.log('Seeded events data successfully.');
     }
+
+    const listingCount = await Listing.countDocuments();
+    if (listingCount === 0) {
+      // Find an existing user or fallback to create a seed user
+      let seedSeller = await User.findOne();
+      if (!seedSeller) {
+        seedSeller = await User.create({
+          username: 'marketplaceseller',
+          email: 'marketplace@echo.local',
+          password: 'Password123!',
+          displayName: 'Alex Rivers',
+          bio: 'Campus thrifter, student & gadget enthusiast.',
+        });
+      }
+
+      const listingsToSeed = mockListings.map((item) => ({
+        ...item,
+        seller: seedSeller._id,
+      }));
+
+      await Listing.create(listingsToSeed);
+      console.log('Seeded marketplace listings successfully.');
+    }
   } catch (err) {
     console.error('Error seeding data:', err.message);
   }
 }
 
 module.exports = seedData;
+

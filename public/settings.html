@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings — Echo</title>
+  <meta name="description" content="Manage your Echo profile, account credentials, footprints, privacy controls, and saved posts.">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
@@ -14,55 +15,311 @@
       <ul class="nav-links" id="nav-links"></ul>
       <div class="sidebar-user" id="nav-user"></div>
     </aside>
+
     <div class="app-main">
       <header class="mobile-header">
         <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
         <span class="logo logo-inline" aria-label="Echo"></span>
         <span></span>
       </header>
-      <main class="main-content">
-        <h1 class="page-heading">Settings</h1>
-        
-        <section class="settings-section">
-          <h2 class="settings-section-title">Account Credentials</h2>
-          <form id="account-settings-form" class="settings-grid">
-            <div class="form-group">
-              <label for="email">Email address</label>
-              <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-              <label for="password">New Password (leave blank to keep current)</label>
-              <input type="password" id="password" name="password" placeholder="At least 6 characters" minlength="6">
-            </div>
-            <button type="submit" class="btn btn-primary btn-sm">Update Account</button>
-          </form>
-        </section>
 
-        <section class="settings-section">
-          <h2 class="settings-section-title">Profile Info</h2>
-          <form id="profile-settings-form" class="settings-grid">
-            <div class="form-group">
-              <label for="displayName">Display name</label>
-              <input type="text" id="displayName" name="displayName" maxlength="50">
+      <main class="main-content settings-main" id="settings-main">
+        <!-- Settings Header & Navigation Tabs -->
+        <header class="settings-page-header">
+          <div>
+            <h1 class="page-heading">Settings</h1>
+            <p class="settings-subtitle">Manage your account, profile, privacy footprints, and bookmarked posts.</p>
+          </div>
+
+          <nav class="settings-tabs" role="tablist" aria-label="Settings categories">
+            <button class="settings-tab active" data-tab="profile" id="tab-btn-profile" role="tab" aria-selected="true" aria-controls="panel-profile">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              <span>Edit Profile</span>
+            </button>
+            <button class="settings-tab" data-tab="footprints" id="tab-btn-footprints" role="tab" aria-selected="false" aria-controls="panel-footprints">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
+              </svg>
+              <span>Footprints</span>
+            </button>
+            <button class="settings-tab" data-tab="saved" id="tab-btn-saved" role="tab" aria-selected="false" aria-controls="panel-saved">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+              </svg>
+              <span>Saved Posts</span>
+            </button>
+          </nav>
+        </header>
+
+        <!-- Loading Skeleton -->
+        <div id="settings-loading" class="settings-loading-skeleton" aria-live="polite" aria-label="Loading settings" style="display: none;">
+          <div class="fp-skeleton fp-skeleton--wide"></div>
+          <div class="fp-skeleton fp-skeleton--card"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════ -->
+        <!-- TAB 1: EDIT PROFILE & ACCOUNT                                       -->
+        <!-- ═══════════════════════════════════════════════════════════════════ -->
+        <div id="panel-profile" class="settings-panel active" role="tabpanel" aria-labelledby="tab-btn-profile">
+          <section class="settings-section">
+            <h2 class="settings-section-title">Profile Information</h2>
+            <p class="settings-section-desc">Update your public persona, bio, and shared interests across Echo.</p>
+            <form id="profile-settings-form" class="settings-grid">
+              <div class="form-group">
+                <label for="displayName">Display name</label>
+                <input type="text" id="displayName" name="displayName" maxlength="50" placeholder="Your name">
+              </div>
+              <div class="form-group">
+                <label for="bio">Bio</label>
+                <textarea id="bio" name="bio" maxlength="160" placeholder="A little about yourself..."></textarea>
+              </div>
+              <div class="form-group">
+                <label for="avatar">Avatar URL</label>
+                <input type="url" id="avatar" name="avatar" placeholder="https://…">
+              </div>
+              <div class="form-group">
+                <label>Interests</label>
+                <div id="interest-picker" class="interest-picker"></div>
+              </div>
+              <div>
+                <button type="submit" class="btn btn-primary btn-sm" id="btn-save-profile">Save Profile</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="settings-section">
+            <h2 class="settings-section-title">Account Credentials</h2>
+            <p class="settings-section-desc">Manage your sign-in email address and account password.</p>
+            <form id="account-settings-form" class="settings-grid">
+              <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" required>
+              </div>
+              <div class="form-group">
+                <label for="password">New Password (leave blank to keep current)</label>
+                <input type="password" id="password" name="password" placeholder="At least 6 characters" minlength="6">
+              </div>
+              <div>
+                <button type="submit" class="btn btn-primary btn-sm" id="btn-save-account">Update Account</button>
+              </div>
+            </form>
+          </section>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════ -->
+        <!-- TAB 2: FOOTPRINTS (DIGITAL FOOTPRINT & PRIVACY REVIEW)              -->
+        <!-- ═══════════════════════════════════════════════════════════════════ -->
+        <div id="panel-footprints" class="settings-panel" role="tabpanel" aria-labelledby="tab-btn-footprints" hidden>
+          <!-- Sub-navigation tabs for Footprints -->
+          <div class="footprints-subtabs-wrap">
+            <div class="footprints-subtabs">
+              <button class="footprints-subtab active" data-subtab="activity">📊 Activity Overview</button>
+              <button class="footprints-subtab" data-subtab="privacy">🔒 Privacy Controls</button>
+              <button class="footprints-subtab" data-subtab="blocked">🚫 Blocked Users</button>
+              <button class="footprints-subtab" data-subtab="security">🛡️ Security Audit</button>
             </div>
-            <div class="form-group">
-              <label for="bio">Bio</label>
-              <textarea id="bio" name="bio" maxlength="160"></textarea>
+          </div>
+
+          <!-- SUBPANEL A: ACTIVITY OVERVIEW -->
+          <div id="subpanel-activity" class="footprints-subpanel">
+            <div class="fp-section-title-wrap">
+              <h2 class="settings-section-title">Activity Metrics</h2>
+              <p class="settings-section-desc">Live statistics compiled from your actual activity across Echo.</p>
             </div>
-            <div class="form-group">
-              <label for="avatar">Avatar URL</label>
-              <input type="url" id="avatar" name="avatar" placeholder="https://…">
+
+            <!-- Stats grid -->
+            <div class="fp-stats-grid" id="fp-stats-grid"></div>
+
+            <!-- Public Profile Review -->
+            <section class="fp-section">
+              <div class="fp-section-header">
+                <div>
+                  <h3 class="fp-section-title">Public Profile Preview</h3>
+                  <p class="fp-section-desc">This is how other users see your profile.</p>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-goto-profile-edit">Edit Profile</button>
+              </div>
+              <div class="fp-card fp-profile-card" id="fp-profile-card"></div>
+            </section>
+
+            <!-- Public Posts Review -->
+            <section class="fp-section">
+              <div class="fp-section-header">
+                <div>
+                  <h3 class="fp-section-title">Your Public Posts</h3>
+                  <p class="fp-section-desc">Posts visible on your profile and public feeds.</p>
+                </div>
+              </div>
+              <div class="fp-card fp-list-card" id="fp-posts-list"></div>
+            </section>
+
+            <!-- Comments Review -->
+            <section class="fp-section">
+              <div class="fp-section-header">
+                <div>
+                  <h3 class="fp-section-title">Your Comments</h3>
+                  <p class="fp-section-desc">Public comments you have left on community posts.</p>
+                </div>
+              </div>
+              <div class="fp-card fp-list-card" id="fp-comments-list"></div>
+            </section>
+
+            <!-- Joined Communities -->
+            <section class="fp-section">
+              <div class="fp-section-header">
+                <div>
+                  <h3 class="fp-section-title">Communities You Have Joined</h3>
+                  <p class="fp-section-desc">Communities you belong to.</p>
+                </div>
+              </div>
+              <div class="fp-card fp-communities-grid" id="fp-communities-list"></div>
+            </section>
+          </div>
+
+          <!-- SUBPANEL B: PRIVACY CONTROLS -->
+          <div id="subpanel-privacy" class="footprints-subpanel" hidden>
+            <div class="fp-section-title-wrap">
+              <h2 class="settings-section-title">Privacy Controls</h2>
+              <p class="settings-section-desc">Control who can view your profile and who is permitted to send you direct messages.</p>
             </div>
-            <div class="form-group">
-              <label>Interests</label>
-              <div id="interest-picker" class="interest-picker"></div>
+
+            <section class="fp-section">
+              <form id="fp-privacy-form" class="fp-privacy-form">
+                <!-- Profile Visibility -->
+                <div class="fp-setting-group">
+                  <div class="fp-setting-header">
+                    <h3 class="fp-setting-title">Profile Visibility</h3>
+                    <p class="fp-setting-desc">Controls who can view your profile, posts, and public activity.</p>
+                  </div>
+                  <div class="fp-radio-cards" role="radiogroup" aria-label="Profile visibility">
+                    <label class="fp-radio-card" id="label-vis-public">
+                      <input type="radio" name="profileVisibility" value="public">
+                      <div class="fp-radio-content">
+                        <strong>Public</strong>
+                        <span>Anyone on Echo can view your profile and posts</span>
+                      </div>
+                    </label>
+                    <label class="fp-radio-card" id="label-vis-followers">
+                      <input type="radio" name="profileVisibility" value="followers">
+                      <div class="fp-radio-content">
+                        <strong>Followers Only</strong>
+                        <span>Only users who follow you can view your profile</span>
+                      </div>
+                    </label>
+                    <label class="fp-radio-card" id="label-vis-private">
+                      <input type="radio" name="profileVisibility" value="private">
+                      <div class="fp-radio-content">
+                        <strong>Private</strong>
+                        <span>Only you can see your profile details and posts</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Messaging Permission -->
+                <div class="fp-setting-group">
+                  <div class="fp-setting-header">
+                    <h3 class="fp-setting-title">Direct Messaging Permission</h3>
+                    <p class="fp-setting-desc">Controls who is permitted to start private conversations with you.</p>
+                  </div>
+                  <div class="fp-radio-cards" role="radiogroup" aria-label="Messaging permissions">
+                    <label class="fp-radio-card" id="label-msg-everyone">
+                      <input type="radio" name="messagingPermission" value="everyone">
+                      <div class="fp-radio-content">
+                        <strong>Everyone</strong>
+                        <span>Any signed-in Echo user can message you</span>
+                      </div>
+                    </label>
+                    <label class="fp-radio-card" id="label-msg-followers">
+                      <input type="radio" name="messagingPermission" value="followers">
+                      <div class="fp-radio-content">
+                        <strong>Followers Only</strong>
+                        <span>Only people you follow or who follow you can message you</span>
+                      </div>
+                    </label>
+                    <label class="fp-radio-card" id="label-msg-none">
+                      <input type="radio" name="messagingPermission" value="none">
+                      <div class="fp-radio-content">
+                        <strong>No One</strong>
+                        <span>Disable all incoming direct messages</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="fp-privacy-actions">
+                  <button type="submit" class="btn btn-primary btn-sm" id="btn-save-privacy">Save Privacy Settings</button>
+                  <span id="fp-privacy-status" class="fp-status-msg" aria-live="polite"></span>
+                </div>
+              </form>
+            </section>
+          </div>
+
+          <!-- SUBPANEL C: BLOCKED USERS -->
+          <div id="subpanel-blocked" class="footprints-subpanel" hidden>
+            <div class="fp-section-title-wrap">
+              <h2 class="settings-section-title">Blocked Accounts</h2>
+              <p class="settings-section-desc">Blocked users cannot view your profile, send messages, or interact with your marketplace listings.</p>
             </div>
-            <button type="submit" class="btn btn-primary btn-sm">Save Profile</button>
-          </form>
-        </section>
+            <div class="fp-card fp-list-card" id="fp-blocked-list"></div>
+          </div>
+
+          <!-- SUBPANEL D: SECURITY AUDIT -->
+          <div id="subpanel-security" class="footprints-subpanel" hidden>
+            <div class="fp-section-title-wrap">
+              <h2 class="settings-section-title">Account Security Audit</h2>
+              <p class="settings-section-desc">Transparent overview of your authentication and security status. No false claims or fake statuses.</p>
+            </div>
+
+            <div class="fp-security-checklist" id="fp-security-checklist"></div>
+
+            <section class="fp-section" style="margin-top: 1.5rem;">
+              <h3 class="fp-section-title" style="margin-bottom: 0.75rem;">System Architecture Notices</h3>
+              <ul class="fp-notice-list">
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-notice-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <div><strong>Stateless JWT authentication</strong> — Echo uses stateless JWT tokens. There is no active server-side session revocation list.</div>
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fp-notice-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <div><strong>Zero Profile Tracking</strong> — Echo does not log or display who views your public profile.</div>
+                </li>
+              </ul>
+            </section>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════ -->
+        <!-- TAB 3: SAVED POSTS                                                  -->
+        <!-- ═══════════════════════════════════════════════════════════════════ -->
+        <div id="panel-saved" class="settings-panel" role="tabpanel" aria-labelledby="tab-btn-saved" hidden>
+          <div class="settings-section-header-row">
+            <div>
+              <h2 class="settings-section-title">Your Saved Posts</h2>
+              <p class="settings-section-desc">Posts and bookmarks you have saved for later reading.</p>
+            </div>
+            <span class="settings-count-pill" id="saved-posts-count-pill">0 saved</span>
+          </div>
+
+          <div id="saved-posts-container" class="saved-posts-grid"></div>
+
+          <!-- Empty State -->
+          <div id="saved-posts-empty" class="saved-empty-state" style="display: none;">
+            <div class="saved-empty-icon">🔖</div>
+            <h3 class="saved-empty-title">No saved posts yet</h3>
+            <p class="saved-empty-desc">When you see helpful posts or community discussions you want to keep, save them to read here anytime.</p>
+            <a href="/home.html" class="btn btn-primary btn-sm">Explore Feed</a>
+          </div>
+        </div>
       </main>
     </div>
   </div>
+
+  <!-- Toast Notification Container -->
+  <div class="hh-toast-container" id="settings-toast-container" aria-live="polite"></div>
+
   <script src="/js/api.js"></script>
   <script src="/js/layout.js"></script>
   <script src="/js/settings.js"></script>

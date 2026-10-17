@@ -70,6 +70,68 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
   }
 });
 
+router.get('/saved', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const postIds = user.savedPosts || [];
+    const posts = await Post.find({ _id: { $in: postIds } })
+      .sort({ createdAt: -1 })
+      .populate('author', 'username displayName avatar')
+      .lean();
+
+    res.json({
+      posts: await enrichPosts(posts, req.user._id),
+      savedPostsCount: posts.length,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.post('/:id/save', protect, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user.savedPosts) user.savedPosts = [];
+
+    const alreadySaved = user.savedPosts.some((id) => id.toString() === post._id.toString());
+    if (!alreadySaved) {
+      user.savedPosts.push(post._id);
+      await user.save();
+    }
+
+    res.json({
+      message: 'Post saved successfully',
+      isSaved: true,
+      savedPostsCount: user.savedPosts.length,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.delete('/:id/save', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (user.savedPosts) {
+      user.savedPosts = user.savedPosts.filter((id) => id.toString() !== req.params.id);
+      await user.save();
+    }
+
+    res.json({
+      message: 'Post removed from saved',
+      isSaved: false,
+      savedPostsCount: (user.savedPosts || []).length,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 router.get('/:id', protect, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id)

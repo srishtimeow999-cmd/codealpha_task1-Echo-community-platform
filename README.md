@@ -16,6 +16,7 @@ A mini social media web app with user profiles, posts, comments, likes, and foll
 - Comment on posts (stored in MongoDB `comments` collection)
 - Like / unlike posts (user IDs stored in each post's `likes` array)
 - Feed from you and people you follow
+- **Facebook-style Marketplace**: Browse, search, filter by price/category/condition, publish listings, bookmark items, and message sellers directly
 
 ## Project structure
 
@@ -109,6 +110,17 @@ link/
 | DELETE | `/api/posts/:id/like` | Unlike post |
 | GET | `/api/posts/:id/comments` | List comments |
 | POST | `/api/comments` | Add comment |
+| GET | `/api/marketplace/listings` | Browse marketplace listings (filters: search, category, condition, price, sort) |
+| GET | `/api/marketplace/listings/:id` | Get single listing with seller details |
+| POST | `/api/marketplace/listings` | Create listing (multipart/form-data or JSON) |
+| PUT | `/api/marketplace/listings/:id` | Edit listing (seller only) |
+| PATCH | `/api/marketplace/listings/:id/status` | Update status (Available, Pending, Sold) |
+| DELETE | `/api/marketplace/listings/:id` | Delete listing (seller only) |
+| POST | `/api/marketplace/listings/:id/save` | Toggle save/bookmark listing |
+| POST | `/api/marketplace/listings/:id/inquire` | Send inquiry message to seller |
+| POST | `/api/marketplace/listings/:id/report` | Report listing |
+| GET | `/api/marketplace/categories` | Categories with active item counts |
+| GET | `/api/marketplace/stats` | Marketplace summary stats |
 
 Protected routes require header: `Authorization: Bearer <token>`
 
